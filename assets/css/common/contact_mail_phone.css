@@ -1,0 +1,35 @@
+.contact-mail-phone {
+    margin-top: 1.5rem;
+}
+
+.contact-container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mail {
+   font-size: 0.9rem;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 8px;
+
+   svg {
+    width: 26px;
+    height: 26px;
+   }
+}
+
+.phone {
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+   svg {
+    width: 26px;
+    height: 26px;
+   }
+}

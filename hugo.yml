@@ -1,0 +1,55 @@
+baseURL: ""
+languageCode: fr
+defaultContentLanguage: "fr"
+defaultContentLang: "fr"
+title: RMR Techs
+theme: PaperMod
+params:
+  # defaultTheme: light
+  defaultTheme: dark
+  # defaultTheme: auto # to switch between dark or light according to browser theme
+  disableThemeToggle: false
+  ShowShareButtons: false
+  DateFormat: "2 Jan 2006"
+  ShowReadingTime: false
+  profileMode:
+    enabled: true
+    title: "Romain Mercier"
+    subtitle: "Développeur Fullstack Java/JS"
+    imageUrl: "imgs/photo_cv_280.jpg"
+    imageWidth: 280
+    imageHeight: 280
+
+  # socialIcons:
+  #   - name: linkedin
+  #   - url: "https://www.linkedin.com/in/romain-mercier/"
+  #   - name: github
+  #   - url: "https://github.com/461OceanBd/"
+  
+  contact:
+    enabled: true
+    socialIcons:
+      - name: linkedin
+        url: "https://www.linkedin.com/in/romain-mercier/"
+      - name: github
+        url: "https://github.com/461OceanBd/"
+    mailPhone:
+      mail: "contact@rmrtechs.fr"
+      phone: "+336 73 23 24 26"
+
+
+
+  description:
+    par1: "Avec pour domaine de prédilection le développement fullstack Java Springboot (et l'écosystème Spring) ainsi que Javascript et Angular, j'aime les applications fiables et maintenables qui mettent l'accent sur l'expérience utilisateur."
+    par2: "Dans ce blog je partage des articles ou simplement de la doc technique sans formalisme particulier."
+
+menu:
+  main:
+    - identifier: blog
+      name: Blog
+      url: /blog/
+      weight: 10
+    - identifier: home
+      name: Home
+      url: /
+      weight: 30
