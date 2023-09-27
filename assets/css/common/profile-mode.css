@@ -49,4 +49,5 @@
     margin-bottom: 6px;
     text-align: justify;
     font-size: 0.9rem;
+    color: var(--secondary);
 }
