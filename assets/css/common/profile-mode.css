@@ -41,13 +41,18 @@
     transform: scale(0.96);
 }
 
-.desc-container {
+.pres-container {
     margin: 3rem;
 }
 
-.description {
+.presentation {
     margin-bottom: 6px;
     text-align: justify;
     font-size: 0.9rem;
     color: var(--secondary);
+}
+
+.post-content {
+    font-size: 1rem;
+    text-align: justify;
 }

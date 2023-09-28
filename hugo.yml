@@ -39,9 +39,9 @@ params:
 
 
 
-  description:
+  presentation:
     par1: "Avec pour domaine de prédilection le développement fullstack Java Springboot (et l'écosystème Spring) ainsi que Javascript et Angular, j'aime les applications fiables et maintenables qui mettent l'accent sur l'expérience utilisateur."
-    par2: "Dans ce blog je partage des articles ou simplement de la doc technique sans formalisme particulier."
+    par2: ""
 
 menu:
   main:
