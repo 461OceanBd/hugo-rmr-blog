@@ -47,7 +47,7 @@ menu:
   main:
     - identifier: blog
       name: Blog
-      url: /blog/
+      url: /posts/
       weight: 10
     - identifier: home
       name: Home
