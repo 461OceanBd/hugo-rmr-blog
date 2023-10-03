@@ -1,17 +1,16 @@
-baseURL: ""
+baseURL: "http://rmrtechs.fr/"
 languageCode: fr
 defaultContentLanguage: "fr"
 defaultContentLang: "fr"
 title: RMR Techs
 theme: PaperMod
 params:
-  # defaultTheme: light
   defaultTheme: dark
   # defaultTheme: auto # to switch between dark or light according to browser theme
   disableThemeToggle: false
   ShowShareButtons: false
   DateFormat: "2 Jan 2006"
-  ShowReadingTime: false
+  ShowReadingTime: true
   profileMode:
     enabled: true
     title: "Romain Mercier"
