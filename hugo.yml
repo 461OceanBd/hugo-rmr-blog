@@ -5,6 +5,8 @@ defaultContentLang: "fr"
 title: RMR Techs
 theme: PaperMod
 params:
+  assets:
+    favicon32x32: "imgs/favicon.svg"
   defaultTheme: dark
   # defaultTheme: auto # to switch between dark or light according to browser theme
   disableThemeToggle: false
