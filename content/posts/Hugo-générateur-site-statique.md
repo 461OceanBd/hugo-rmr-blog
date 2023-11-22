@@ -81,3 +81,5 @@ Pour build le projet :
 ```
 hugo
 ```
+
+Cette commande permet la génération du site web statique à partir de fichiers Markdown et des modèles. Elle compile le contenu, crée des pages HTML, et copie les ressources statiques. Le site généré est prêt à être déployé en ligne !

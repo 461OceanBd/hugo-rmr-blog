@@ -1,10 +1,13 @@
-baseURL: "http://rmrtechs.fr/"
+baseURL: "https://rmrtechs.fr/"
 languageCode: fr
 defaultContentLanguage: "fr"
 defaultContentLang: "fr"
 title: RMR Techs
 theme: PaperMod
 params:
+  assets:
+    favicon16x16: "imgs/favicon.ico"
+    favicon32x32: "imgs/favicon.ico"
   defaultTheme: dark
   # defaultTheme: auto # to switch between dark or light according to browser theme
   disableThemeToggle: false

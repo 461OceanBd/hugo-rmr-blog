@@ -5,9 +5,7 @@ draft: false
 ---
 
 
-# Aide mémoire/Résumé des commandes docker
-
-# Approche conceptuelle rapide de Docker
+## Approche conceptuelle rapide de Docker
 
 Docker est une plateforme de virtualisation légère qui permet d'emballer des applications et leurs dépendances dans des conteneurs, offrant une isolation efficace et une portabilité entre les environnements.
 
@@ -20,23 +18,23 @@ Les principaux concepts de Docker sont les suivants :
 - **Réseau Docker** : Les réseaux Docker permettent aux conteneurs de communiquer entre eux et avec le monde extérieur. Vous pouvez créer des réseaux personnalisés pour isoler des groupes de conteneurs ou utiliser le réseau par défaut.
 
 
-# Commandes Docker courantes
+## Commandes Docker courantes
 
 Pour gérer des conteneurs Docker, vous pouvez utiliser la ligne de commande Docker. Voici quelques commandes courantes pour gérer des images et des conteneurs et obtenir des informations sur les conteneurs en cours d'exécution :
 
-## Voir les images disponibles en local :
+### Voir les images disponibles en local :
 
 ```
 docker images
 ```
 
-## aller chercher une image sur le Docker Hub
+### aller chercher une image sur le Docker Hub
 
 ```
 docker pull <nom de l'image>
 ```
 
-## Pour des build images en locales (images custom) :
+### Pour des build images en locales (images custom) :
 
 ```
 docker build -t <nom_image> .
@@ -139,7 +137,7 @@ docker stop $(docker ps -q)
 Cette commande arrête tous les conteneurs en cours d'exécution.
 
 
-## Nettoyer son système :
+### Nettoyer son système :
 
 ```
 docker image prune -a
