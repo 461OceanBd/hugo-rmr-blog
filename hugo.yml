@@ -3,7 +3,7 @@ languageCode: fr
 defaultContentLanguage: "fr"
 defaultContentLang: "fr"
 title: RMR Techs
-theme: PaperMod
+theme: ["PaperMod"]
 params:
   label:
     icon: "imgs/RMRTECHS_ICON.svg"
