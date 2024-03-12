@@ -5,6 +5,10 @@ defaultContentLang: "fr"
 title: RMR Techs
 theme: PaperMod
 params:
+  label:
+    icon: "imgs/RMRTECHS_ICON.svg"
+    rmr: RMR
+    techs: Techs
   assets:
     favicon16x16: "imgs/favicon.ico"
     favicon32x32: "imgs/favicon.ico"
