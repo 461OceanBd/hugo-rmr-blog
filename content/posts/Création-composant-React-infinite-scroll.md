@@ -30,7 +30,7 @@ sequenceDiagram
     end
 ```
 
-Pour faire cet article je vais utiliser la très bonne API [The Cat API](https://thecatapi.com/). Comme vous l'aurez compris ici, cats run the world ! J'affiche une page sur une race de chat dans laquelle se trouve une gallerie d'images. C'est sur cette dernière que je souhaite mettre en place mon doom cat scroll. ☠️🐱
+Pour faire cet article je vais utiliser la très bonne API [The Cat API](https://thecatapi.com/). Comme vous l'aurez compris ici, cats run the world ! J'affiche une page sur une race de chat dans laquelle se trouve une galerie d'images. C'est sur cette dernière que je souhaite mettre en place mon doom cat scroll. ☠️🐱
 
 Voici le résultat :
 
@@ -39,7 +39,7 @@ Voici le résultat :
 ## Le Plan de Bataille 🛠️
 
 Voici ce que nous allons faire :
-1. Configurer les appels API avec `react-query` pour gérer les appels d'API de manière paginée et efficace
+1. Configurer les appels API avec **TanStack Query** pour gérer les appels d'API de manière paginée et efficace
 2. Créer un composant `InfiniteScrollImages` qui gérera le rendu des images selon l'événement de scroll
 3. Effectuer les appels serveurs et instancier le composant dans le parent
 
@@ -100,8 +100,8 @@ export const useFetchInfiniteImagesByBreed = (breedId, limit = 4, order = 'ASC')
 Disséquons ce code en commençant par l'utilisation du `useInfiniteQuery`. Il a besoin pour fonctionner d'un objet constitué de :
  - La `queryFn` qui contient la ***référence*** à la query.
  - `initialPageParam` est la page qui sera chargée en premier. Il est optionel et par défaut à 0.
- - La `initialPageParam` est l'identifiant de la requête. Cela permet notamment à TanStack de gérer la mise en cache des requête. Il sert, en plus, ici, à passer les différents params de la fonction passée en référence dans la `queryFn`.
- - `getNextPageParam` est une fonction qui permet à la "infinite query" de savoir comment aller à la page suivante. Notre Cat API n'est malheureusement pas implémentée en modèle ***HATEOAS*** et ne contient donc pas de liens de navigations; ce qui nous aurait simplifié les choses. Pour contourner le problème, la fonction renvoit la page suivante est demandée si les derniers résultats obtenus sont du nombre de ceux demandés (`limit`). Sinon cela signifie que l'on est arrivé au bout des résultats.
+ - La `queryKey` est l'identifiant de la requête. Cela permet notamment à TanStack de gérer la mise en cache des requête. Il sert, en plus, ici, à passer les différents params de la fonction passée en référence dans la `queryFn`.
+ - `getNextPageParam` est une fonction qui permet à la "infinite query" de savoir comment aller à la page suivante. Notre Cat API n'est malheureusement pas implémentée en modèle ***HATEOAS*** et ne contient donc pas de liens de navigations; ce qui nous aurait simplifié les choses. Pour contourner le problème, la fonction renvoit la page suivante si les derniers résultats obtenus sont du nombre de ceux demandés (`limit`). Sinon cela signifie que l'on est arrivé au bout des résultats.
 
 ### 2. Création du composant `InfiniteScrollImages` pour gérer le rendu des images
 
@@ -148,6 +148,7 @@ export default InfiniteScrollImages;
 ```
 
 Le hook `useEffect` contient la logique d'infinite scroll. L'idée est d'écouter l'événement de scroll et de vérifier dans la fonction de callback, si l'utilisateur est proche du bas du défilement de la page pour appeler la fonction de fetch de la page suivante.
+
 Lorsque le composant est démonté, on s'assure de supprimer le listener pour éviter les fuites de mémoire.
 Il ne reste plus qu'à parcourir `data` pour afficher les images présentent dans chaque page. Un loader s'affiche lorsqu'une nouvelle requête est envoyée à l'API. Un peu de CSS pour gérer l'affichage, rendre tout cela responsive et le tour est joué !
 
