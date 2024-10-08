@@ -1,5 +1,5 @@
 ---
-title: "Création d'un Composant Infinite Scroll en React"
+title: "Création d'un composant Infinite Scroll en React"
 date: 2024-10-07T14:00:00+02:00
 draft: false
 ---
