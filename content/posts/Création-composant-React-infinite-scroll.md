@@ -91,6 +91,23 @@ Disséquons ce code en commençant par l'utilisation du `useInfiniteQuery`. Il a
  - La `queryKey` est l'identifiant de la requête. Cela permet notamment à TanStack de gérer la mise en cache des requête.
  - `getNextPageParam` est une fonction qui permet à la "infinite query" de savoir comment aller à la page suivante. Notre Cat API n'utilise malheureusement pas le **cursor-based-pagination**. La response ne contient donc pas de liens de navigation mais une pagination classique. Pour contourner le problème, la fonction renvoit la page suivante si les derniers résultats obtenus sont du nombre de ceux demandés (`limit`). Sinon cela signifie que l'on est arrivé au bout des résultats.
 
+> **Hack :**
+> 
+> Une alternative pour passer les paramètres dans le `queryFn` sans utiliser de fonction imbriquée consiste à passer les paramètres via le `queryKey`, de cette manière :
+> 
+> ```javascript
+> const fetchImagesByBreed = async ({ pageParam = 0, queryKey }) => {
+>      const [_, breedId, limit, order] = queryKey;
+>      // ...
+> }
+> 
+> return useInfiniteQuery({
+>     queryKey: ['imagesByBreed', breedId, limit, order],
+>     queryFn: fetchImagesByBreed,
+>     // ...
+> });
+>```
+
 ### 2. Création du composant `InfiniteScrollImages` pour gérer le rendu des images
 
 Voyons maintenant la création du composant réutilisable `InfiniteScrollImages`. Ce composant est responsable de l'affichage des images et de l'écoute des événements de scroll pour savoir quand charger les prochaines pages d'images. il reçoit en props le résultat par destructuration du `useFetchInfiniteImagesByBreed()` :
