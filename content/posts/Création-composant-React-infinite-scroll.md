@@ -15,14 +15,14 @@ L'infinite scroll est une technique d'UX qui permet de charger plus de contenu d
 ## Exemple d'utilisation :
 
 Prenons par exemple une galerie d'images qui affiche les premiers résultats, puis va  charger au fur et à mesure les résultats suivant.
-Voici un diagramme de séquence simple pour décomposer le principe utilisateur :
+On commence par un diagramme de séquence tout simple pour décomposer le principe utilisateur :
 
 ```mermaid
 sequenceDiagram
     participant User
     participant Browser
     participant API
-    loop jusqu'à la fin des pages ☠️
+    loop jusqu'à la dernière page ☠️
         User->>Browser: Arrive en bas de page via scroll
         Browser->>API: Demande plus d'images (fetchNextPage)
         API-->>Browser: Ajoute la nouvelle page d'images aux précedentes
@@ -48,64 +48,52 @@ Voici ce que nous allons faire :
 ### 1. Les API Call avec `react-query`
 
 Commençons d'abord pas mettre en place la partie permettant de gérer les appels API. Il est préférable de commencer par cette partie car c'est elle qui va structurer le composant. Après un peu de veille, c'est le choix de la librairie **TanStack Query** (FKA React Query) qui s'impose rapidement. Cette librairie populaire de data fetching nous facilite grandement l'affaire puisqu'elle dispose une version de `useQuery`, appelée `useInfiniteQuery`, qui permet de gérer les appels aux requêtes paginées des API. A cette date, j'utilise la dernière version de la librairie (5.59.0). Voyons cela en détail sur notre Cat API.
-Analysons notre API. Voici la requête pour fetch mes images de chats par race en utilisant `Axios` pour les appels :
+Analysons notre API. Voici la fonction de fetch de mes images de chats par race en utilisant `Axios` pour les appels :
 
 ```javascript
-const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/images/search`, {
-    params: {
-        breed_ids: breedId,
-        page: pageParam,
-        limit: limit,
-        order: order,
-    },
-    headers: {
-        "x-api-key": process.env.REACT_APP_CAT_API_KEY,
-    },
-});
-```
-
-Le numéro de page est donc situé dans les params de la requête. L'objectif est de laisser la fonction `useInfiniteQuery` gérer le passage à la page suivante pour charger les résultats. Pour rendre l'appel paramètrable, il va falloir wrapper tout cela dans une fonction contenant les différents paramètres de l'appel à l'API, à l'exception du numéro de page, géré par React Query.
-
-```javascript
-export const useFetchInfiniteImagesByBreed = (breedId, limit = 4, order = 'ASC') => {
-    const fetchBreedImageById = async ({ pageParam = 0, queryKey }) => {
-        const [_, breedId, limit, order] = queryKey; // Récupére les paramètres de la clé de requête
-
-        const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/images/search`, {
+async function fetchImagesByBreed({ breedId, limit = 10, order = 'ASC', pageParam = 0 }) {
+    try {
+        const url = `${process.env.REACT_APP_BASE_API_URL}/images/search`;
+        const response = await axios.get(url, {
             params: {
                 breed_ids: breedId,
+                limit,
+                order,
                 page: pageParam,
-                limit: limit,
-                order: order,
             },
-            headers: {
-                "x-api-key": process.env.REACT_APP_CAT_API_KEY,
-            },
+            headers: HEADERS,
         });
         return response.data;
-    };
+    } catch (error) {
+        throw error;
+    }
+}
+```
 
+On passe ensuite à l'implémentation de la fonction qui va appeler le hook `useInfiniteQuery`. L'objectif est de lui laisser gérer le passage à la page suivante pour charger les résultats. On va wrapper tout cela dans une fonction contenant les différents paramètres de l'appel à l'API, à l'exception du numéro de page, géré par React Query.
 
-    return useInfiniteQuery({
-        queryKey: ['imagesByBreed', breedId, limit, order],
-        queryFn: fetchBreedImageById,
-        initialPageParam: 0,
-        getNextPageParam: (lastPage, pages) => {
-            const nextPage = pages.length;
-            return lastPage.length === limit ? nextPage : undefined;
-        },
-    });
-};
+```javascript
+export function useFetchInfiniteImagesByBreed(breedId, limit = 10, order = 'ASC') {
+    return useInfiniteQuery(
+        {
+            queryKey: ['breedImages', breedId],
+            queryFn: ({ pageParam = 0 }) => fetchImagesByBreed({breedId, limit, order, pageParam}),
+            getNextPageParam: (lastPage, pages) => {
+                const nextPage = pages.length;
+                return lastPage.length === limit ? nextPage : undefined;
+            },
+        }
+    );
+}
 ```
 Disséquons ce code en commençant par l'utilisation du `useInfiniteQuery`. Il a besoin pour fonctionner d'un objet constitué de :
- - La `queryFn` qui contient la ***référence*** à la query.
- - `initialPageParam` est la page qui sera chargée en premier. Il est optionel et par défaut à 0.
- - La `queryKey` est l'identifiant de la requête. Cela permet notamment à TanStack de gérer la mise en cache des requête. Il sert, en plus, ici, à passer les différents params de la fonction passée en référence dans la `queryFn`.
- - `getNextPageParam` est une fonction qui permet à la "infinite query" de savoir comment aller à la page suivante. Notre Cat API n'est malheureusement pas implémentée en modèle ***HATEOAS*** et ne contient donc pas de liens de navigations; ce qui nous aurait simplifié les choses. Pour contourner le problème, la fonction renvoit la page suivante si les derniers résultats obtenus sont du nombre de ceux demandés (`limit`). Sinon cela signifie que l'on est arrivé au bout des résultats.
+ - La `queryFn` qui contient une fonction fléchée qui retourne l'appel à la query `fetchImagesByBreed` en lui passant la page 0 en paramètre. La fonction imbriquée permet de passer facilement les paramètres de la query et de donner la référence à la page en paramètre de la fonction fléchée.
+ - La `queryKey` est l'identifiant de la requête. Cela permet notamment à TanStack de gérer la mise en cache des requête.
+ - `getNextPageParam` est une fonction qui permet à la "infinite query" de savoir comment aller à la page suivante. Notre Cat API n'utilise malheureusement pas le **cursor-based-pagination**. La response ne contient donc pas de liens de navigation mais une pagination classique. Pour contourner le problème, la fonction renvoit la page suivante si les derniers résultats obtenus sont du nombre de ceux demandés (`limit`). Sinon cela signifie que l'on est arrivé au bout des résultats.
 
 ### 2. Création du composant `InfiniteScrollImages` pour gérer le rendu des images
 
-Voyons maintenant la création du composant réutilisable `InfiniteScrollImages`. Ce composant est responsable de l'affichage des images et de l'écoute des événements de scroll pour savoir quand charger les prochaines pages d'images.
+Voyons maintenant la création du composant réutilisable `InfiniteScrollImages`. Ce composant est responsable de l'affichage des images et de l'écoute des événements de scroll pour savoir quand charger les prochaines pages d'images. il reçoit en props le résultat par destructuration du `useFetchInfiniteImagesByBreed()` :
 
 ```javascript
 const InfiniteScrollImages = ({ data, fetchNextPage, hasNextPage, isFetchingNextPage }) => {
@@ -150,7 +138,7 @@ export default InfiniteScrollImages;
 Le hook `useEffect` contient la logique d'infinite scroll. L'idée est d'écouter l'événement de scroll et de vérifier dans la fonction de callback, si l'utilisateur est proche du bas du défilement de la page pour appeler la fonction de fetch de la page suivante.
 
 Lorsque le composant est démonté, on s'assure de supprimer le listener pour éviter les fuites de mémoire.
-Il ne reste plus qu'à parcourir `data` pour afficher les images présentent dans chaque page. Un loader s'affiche lorsqu'une nouvelle requête est envoyée à l'API. Un peu de CSS pour gérer l'affichage, rendre tout cela responsive et le tour est joué !
+Il ne reste plus qu'à parcourir `data` pour afficher les images présentent dans chaque page. Un loader s'affiche lorsqu'une nouvelle requête est envoyée à l'API. Un peu de CSS pour l'affichage et rendre tout cela responsive, faire la gestion d'erreur et le tour est joué !
 
 ### 3. Intégration finale
 
@@ -162,6 +150,8 @@ const {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isError,
+    error
 } = useFetchInfiniteImagesByBreed(breed.id, 8, 'ASC');
 
 return (
