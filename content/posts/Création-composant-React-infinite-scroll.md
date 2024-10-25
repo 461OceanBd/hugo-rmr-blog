@@ -34,7 +34,7 @@ Pour faire cet article je vais utiliser la très bonne API [The Cat API](https:/
 
 Voici le résultat :
 
-![Doom cat scroll](http://rmrtechs.fr/imgs/capture-infinite-scroll.gif)
+![Doom cat scroll](https://rmrtechs.fr/imgs/capture-infinite-scroll.gif)
 
 ## Le Plan de Bataille 🛠️
 
