@@ -5,6 +5,7 @@ defaultContentLang: "fr"
 title: RMR Techs
 theme: ["PaperMod"]
 params:
+  description: "Romain Mercier, développeur Fullstack spécialisé en Java Spring Boot et JavaScript, créant des applications fiables et centrées sur l'expérience utilisateur."
   label:
     icon: "imgs/RMRTECHS_ICON.svg"
     rmr: RMR
